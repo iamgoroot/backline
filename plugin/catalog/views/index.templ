@@ -1,0 +1,41 @@
+package views
+
+import "github.com/iamgoroot/backline/pkg/core"
+
+templ Header(htmlHeaders core.Component) {
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>Backline</title>
+		@htmlHeaders
+	</head>
+}
+
+templ Index(plugins core.Plugins, display templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en">
+		@Header(plugins.HTMLHeader())
+		<body style="color-scheme: light dark;">
+			@HeaderMenu(plugins.HeaderItem())
+			<div id="sidebar" class="sidebar">
+				<ul>
+					for _, kind := range kinds {
+						<li><a href="" hx-push-url={ kind.Path } hx-get={ kind.Endpoint } hx-target="#content">{ kind.Name }</a></li>
+					}
+				</ul>
+			</div>
+			<div id="content" class="content">
+				if display != nil {
+					@display
+				}
+			</div>
+		</body>
+	</html>
+}
+
+templ HeaderMenu(headerItems core.Component) {
+	<div id="headerMenu">
+		<div id="headerTitle"><h1>Backline</h1></div>
+		@headerItems
+	</div>
+}

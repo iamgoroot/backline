@@ -1,0 +1,8 @@
+package views
+
+templ TabLink(entityName string) {
+<a class="tab-item"
+    hx-get={ "/rawdefinition/by-fullname/" + entityName +"?htmlPreformatted=true" }
+    hx-target="#tab-content"
+>Raw Definition</a>
+}

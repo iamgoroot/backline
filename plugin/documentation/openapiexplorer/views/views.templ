@@ -1,0 +1,26 @@
+package views
+
+import (
+	"github.com/iamgoroot/backline/pkg/model"
+	"strings"
+	"fmt"
+)
+// TODO: use bundled openapi-explorer
+templ HTMLHeaders() {
+	<script type="module" src="https://unpkg.com/openapi-explorer@0/dist/browser/openapi-explorer.min.js"></script>
+}
+
+templ EntityTab(entity *model.Entity) {
+	if strings.EqualFold(entity.Spec.Type, "openapi") && entity.Spec.Definition != nil {
+		{{ specURL := fmt.Sprintf("/openapi-explorer/spec/by-fullname/%s", entity.FullName) }}
+		<openapi-explorer class="width:100%; height:100%;" spec-url={ specURL }></openapi-explorer>
+	}
+}
+
+templ EntityTabLink(entity *model.Entity) {
+	if strings.EqualFold(entity.Spec.Type, "openapi") && entity.Spec.Definition != nil {
+		{{ link := fmt.Sprintf("/openapi-explorer/render/by-fullname/%s", entity.FullName) }}
+		<a class="tab-item" hx-get={ link } hx-target="#tab-content">OpenAPI Explorer</a>
+	}
+}
+

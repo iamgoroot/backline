@@ -1,0 +1,48 @@
+package views
+
+import "github.com/iamgoroot/backline/plugin/documentation/techdocs/model"
+
+templ TechDocs(entityName string, nav *model.Nav) {
+    <div id="techdocs-sidebar" class="sidebar-internal" onload="console.log(this)">
+    	@navigation(entityName, nav)
+    </div>
+	<div id="docs-content" class="content" hx-trigger="load" hx-get={ getFirstLink(entityName, nav) }></div>
+}
+
+templ navigation(entityName string, nav *model.Nav) {
+	<ul>
+		if nav.URL != "" {
+        	 <a href="" hx-get={ getContentURL(entityName, nav.URL) } hx-target="#docs-content">{ nav.Name }</a>
+		} else {
+			<label>{ nav.Name }</label>
+		}
+		for _ , child := range nav.Children {
+			@navigation(entityName, child)
+		}
+	</ul>
+}
+
+func getFirstLink(entityName string,nav *model.Nav) string {
+	if nav.URL != "" {
+		return getContentURL(entityName, nav.URL)
+	}
+	for _, child := range nav.Children {
+		return getFirstLink(entityName, child)
+	}
+	return ""
+}
+
+templ DocsLinkByRef(ref string) {
+    <a hx-push-url={ "/catalog/view/entity/fullname/" + ref }
+        hx-get={ "/catalog/component/entity/fullname/" + ref }
+        hx-target="#content"
+    >TechDocs</a>
+}
+
+templ DocsLink(entityName string) {
+    <a class="tab-item"
+        hx-push-url={ "/techdocs/view/entity/by-fullname/" + entityName }
+        hx-get={ "/techdocs/component/entity/by-fullname/" + entityName }
+        hx-target="#tab-content"
+    >TechDocs</a>
+}

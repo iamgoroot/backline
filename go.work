@@ -1,0 +1,28 @@
+go 1.24.0
+
+toolchain go1.24.0
+
+use (
+	./app
+	./cmd/distributed
+	./cmd/scan_service
+	./cmd/standalone
+	./cmd/webapp
+	./pkg
+	./plugin/auth/oauth2
+	./plugin/catalog
+	./plugin/discovery/fs
+	./plugin/discovery/github
+	./plugin/documentation/asyncapi
+	./plugin/documentation/openapiexplorer
+	./plugin/documentation/rawdefinition
+	./plugin/documentation/swaggerui
+	./plugin/documentation/techdocs
+	./plugin/scanner
+	./plugin/search/bluge
+	./plugin/search/elastic
+	./plugin/search/indexer
+	./plugin/search/ui
+	./plugin/theme/stock
+
+)

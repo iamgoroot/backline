@@ -1,0 +1,25 @@
+core:
+  server:
+    disabled: true
+  logger:
+    level: env:LOG_LEVEL|DEBUG
+    format: json
+  repo:
+    sqlite:
+      url: env:SQLITE_URL|./db.sqlite
+  kv:
+    sqlite:
+      url: env:KV_SQLITE_URL|./kv.sqlite
+  scanner:
+    scanBeforeStart: true
+locations:
+  github:
+    - owner: backstage
+      repo: backstage
+      branch: master
+      accessToken: env:GITHUB_ACCESS_TOKEN
+      depth: 1
+      paths:
+        - packages/catalog-model/examples
+        - ""
+        - plugins/techdocs-backend/examples/documented-component

@@ -1,0 +1,39 @@
+.content {
+    margin-left: 18vw; /* Adjust based on sidebar width + some spacing */
+    margin-right: 1vw;
+}
+
+table {
+    background-color: var(--background);
+}
+
+th, td {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    font-weight: bold;
+}
+
+tr {
+    background-color: var(--background);
+}
+
+a {
+    color: var(--link-color);
+}
+
+tr:nth-child(even) { /* Zebra striping for rows */
+    background-color: var(--background-secondary);
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text-color);
+}
+
+h1 {
+    margin: 1vw;
+}

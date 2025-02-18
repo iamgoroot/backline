@@ -1,0 +1,112 @@
+package catalog
+
+import (
+	"fmt"
+	"github.com/iamgoroot/backline/pkg/core"
+	"github.com/iamgoroot/backline/pkg/model"
+)
+
+templ EntityInfo(plugins core.Plugins, entity *model.Entity) {
+	<div class="entity-info-container">
+		<div class="card">
+			<h4><b>About</b></h4>
+			@profilePicture(entity.Spec.Profile)
+			@aboutItem("Description", entity.Metadata.Description)
+			<div class="container-grid">
+				@entityRef("System", entity.Spec.System)
+				@entityRef("Owner", entity.Spec.Owner)
+				@aboutItem("Type", entity.Spec.Type)
+				@aboutItem("Lifecycle", entity.Spec.Lifecycle)
+				@entityTags(entity.Metadata.Tags)
+			</div>
+		</div>
+		@entityLinks(entity.Metadata.Links)
+		@relation("ParentOf", entity.Spec.ParentOf)
+		@relation("ChildOf", entity.Spec.ChildOf)
+		@relation("Owner Of", entity.Spec.OwnerOf)
+		@relation("Owned By", entity.Spec.OwnedBy)
+		@relation("Depends On", entity.Spec.DependsOn)
+		@relation("Dependency Of", entity.Spec.DependencyOf)
+		@relation("Provides API", entity.Spec.ProvidesAPI)
+		@relation("API Provided By", entity.Spec.APIProvidedBy)
+		@relation("Consumes API", entity.Spec.ConsumesAPI)
+		@relation("API Consumed By", entity.Spec.APIConsumedBy)
+		@relation("Has member", entity.Spec.HasMember)
+		@relation("Member Of", entity.Spec.MemberOf)
+		@relation("Part Of", entity.Spec.PartOf)
+		@relation("Has part", entity.Spec.HasPart)
+		@relation("Children", entity.Spec.Children)
+	</div>
+}
+
+templ relation(title string, entities []string) {
+	if len(entities) != 0 {
+		<div class="card">
+			<h4><b>{ title }</b></h4>
+			for _, e := range entities {
+				<li>
+					@entityHref(e)
+				</li> // TODO: render details
+			}
+		</div>
+	}
+}
+
+templ entityRef(title string, fullname string) {
+	if fullname != "" {
+		<div>
+			<h5><b>{ title }</b></h5>
+			@entityHref(fullname)
+		</div>
+	}
+}
+
+templ aboutItem(title string, text string) {
+	if text != "" {
+		<div>
+			<h5><b>{ title }</b></h5>
+			<p>{ text }</p>
+		</div>
+	}
+}
+
+templ profilePicture(profile *model.Profile) {
+	if profile != nil {
+		<div>
+			<h5>{ profile.DisplayName }</h5>
+			<img src={ profile.Picture }/>
+			<a href={ templ.URL(fmt.Sprintf("mailto:%s", profile.Email)) }>{ profile.Email }</a>
+		</div>
+	}
+}
+
+templ entityLinks(links []model.Link) {
+	if len(links) != 0 {
+		<div class="card">
+			<h5><b>Links</b></h5>
+			<div class="container-grid">
+				for _, link := range links {
+					<li><a href={ templ.URL(link.URL) }>{ link.Title }</a></li>
+				}
+			</div>
+		</div>
+	}
+}
+
+templ entityTags(tags []string) {
+	if len(tags) != 0 {
+		<div>
+			<h5><b>Tags</b></h5>
+			for _, tag := range tags {
+				<li>{ tag }</li>
+			}
+		</div>
+	}
+}
+
+templ entityHref(fullname string) {
+	<a 
+		hx-push-url={ fmt.Sprintf("/catalog/view/entity/fullname/%s", fullname) }
+		hx-get={ fmt.Sprintf("/catalog/component/entity/fullname/%s", fullname) } 
+		hx-target="#content">{ fullname }</a>
+}

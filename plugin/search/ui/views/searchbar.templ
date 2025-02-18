@@ -1,0 +1,26 @@
+package views
+
+import "github.com/iamgoroot/backline/pkg/core"
+
+templ Search() {
+    <form class="search-container" hx-get="/search" hx-target="#content" method="GET">
+            <input type="text" hx-trigger="change" name="query" placeholder="Search..." required>
+            <button type="submit">Search</button>
+    </form>
+}
+
+templ SearchResults(results []core.SearchResult) {
+    <div class="search-results">
+    for _, result := range results {
+        <div class="search-result">
+            <div class="search-result-link">
+                <a href={ templ.URL(result.Link) }>{ result.EntityName }</a>
+            </div>
+            <div>{ result.Category }</div>
+            if result.Highlight != "" {
+                <div class="search-result-highlight"><p>@templ.Raw(result.Highlight)</p></div>
+            }
+        </div>
+        }
+    </div>
+}

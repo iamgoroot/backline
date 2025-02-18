@@ -1,0 +1,14 @@
+package views
+
+import "github.com/iamgoroot/backline/pkg/core"
+
+templ ScanButton(show func() bool) {
+    if !show() {
+        return
+    }
+    <button class="headerItem"
+        hx-post="/scanner/run"
+        hx-swap="none"
+        hx-headers={ `'{ "X-CSRF-Token" :"` + core.GetCSRFToken(ctx) + `"}'` }
+    >Scan entities</button>
+}

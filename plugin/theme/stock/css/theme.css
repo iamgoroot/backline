@@ -1,0 +1,16 @@
+/*noinspection CssInvalidFunction*/
+:root {
+    --background: light-dark(#F2EFE5, #494d5f9e);
+    --background-secondary: light-dark(#E3E1D9, #494D5F);
+
+    --text-color: light-dark(#03180b, #efedea);
+    --text-color-secondary: light-dark(#B4B4B8, #b3a187);
+
+    --border-color: light-dark(#B4B4B8,hwb(0 31% 69%));
+
+    --link-color: light-dark(#03180b, #74b7ff);
+    --link-color-hover: light-dark(#B4B4B8, #74d7ff);
+    --link-color-visited: light-dark(#03180b, #efedea);
+    --link-color-visited-hover: light-dark(#efedea, #74d7ff);
+    --link-color-active: light-dark(#03180b, #efedea);
+}

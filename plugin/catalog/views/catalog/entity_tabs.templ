@@ -1,0 +1,25 @@
+package catalog
+
+import (
+	"fmt"
+	"github.com/iamgoroot/backline/pkg/model"
+	"github.com/iamgoroot/backline/pkg/core"
+
+)
+
+templ Entity(plugins core.Plugins, entity *model.Entity, content templ.Component) {
+	<div>
+		<div class="tab-bar">
+			<a class="tab-item" 
+				hx-push-url={ fmt.Sprintf("/catalog/view/entity/fullname/%s", entity.Metadata.Name) } 
+				hx-get={ fmt.Sprintf("/catalog/component/entity/info/fullname/%s", entity.Metadata.Name) } 
+				hx-target="#tab-content">Info</a>
+			for _, tab := range plugins.GetEntityTabPlugins() {
+				@tab.EntityTabLink(entity)
+			}
+		</div>
+		<div id="tab-content">
+			@content
+		</div>
+	</div>
+}

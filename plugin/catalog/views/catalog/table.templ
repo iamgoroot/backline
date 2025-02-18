@@ -1,0 +1,47 @@
+package catalog
+
+import (
+	"fmt"
+	"github.com/iamgoroot/backline/pkg/model"
+)
+
+templ EntityRows(values []*model.Entity) {
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">Name</th>
+				<th scope="col">Owner</th>
+				<th scope="col">System</th>
+				<th scope="col">Type</th>
+				<th scope="col">Lifecycle</th>
+				<th scope="col">Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, val := range values {
+				<tr>
+					@EntityRow(val)
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+templ EntityRow(entity *model.Entity) {
+	<td>
+		<a href=""
+			hx-push-url={fmt.Sprintf("/catalog/view/entity/fullname/%s", entity.FullName) }
+			hx-get={ fmt.Sprintf("/catalog/component/entity/fullname/%s", entity.FullName) }
+			hx-target="#content"
+		>{ entity.Metadata.Name }</a>
+	</td>
+	<td>
+		@entityHref(entity.Spec.Owner)
+	</td>
+	<td>
+		@entityHref(entity.Spec.System)
+	</td>
+	<td>{ entity.Spec.Type }</td>
+	<td>{ entity.Spec.Lifecycle }</td>
+	<td>{ entity.Metadata.Description }</td>
+}

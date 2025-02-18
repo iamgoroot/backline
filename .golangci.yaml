@@ -1,0 +1,101 @@
+run:
+  go: '1.23'
+linters:
+  enable:
+    - bodyclose
+    - errcheck
+    - goconst
+    - gocritic
+    - gofmt
+    - goimports
+    - mnd
+    - goprintffuncname
+    - misspell
+    - nilerr
+    - staticcheck
+    - stylecheck
+    - unconvert
+    - unparam
+    - whitespace
+    - gosimple
+    - unused
+    - asasalint
+    - sqlclosecheck
+    - noctx
+    - prealloc
+    - rowserrcheck
+    - wsl
+    - ineffassign
+    - durationcheck
+    - testpackage
+    - paralleltest
+    - copyloopvar
+    - funlen
+    - forcetypeassert
+    - fatcontext
+    - canonicalheader
+    - cyclop
+    - decorder
+    - dupl
+    - durationcheck
+    - err113
+    - gocheckcompilerdirectives
+    - gocyclo
+    - grouper
+    - varnamelen
+    - unconvert
+    - godot
+    - gomoddirectives
+    - gosec
+    - lll
+linters-settings:
+  gocritic:
+    enable-all: true
+  lll:
+    line-length: 140
+  varnamelen:
+    ignore-names:
+      - tx
+      - db
+  govet:
+    enable:
+      - appends
+      - asmdecl
+      - assign
+      - atomic
+      - atomicalign
+      - bools
+      - buildtag
+      - cgocall
+      - composites
+      - copylocks
+      - deepequalerrors
+      - defers
+      - directive
+      - errorsas
+      - fieldalignment
+      - findcall
+      - framepointer
+      - httpresponse
+      - ifaceassert
+      - loopclosure
+      - lostcancel
+      - nilfunc
+      - nilness
+      - printf
+      - reflectvaluecompare
+      - shadow
+      - shift
+      - sigchanyzer
+      - slog
+      - sortslice
+      - stdmethods
+      - stringintconv
+      - structtag
+      - testinggoroutine
+      - tests
+      - unmarshal
+      - unreachable
+      - unsafeptr
+      - unusedresult
+      - unusedwrite

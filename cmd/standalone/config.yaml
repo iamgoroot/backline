@@ -1,0 +1,57 @@
+core:
+  server:
+    port: env:PORT|8080
+    host: localhost
+    https:
+      disabled: false
+      certFile: "../../../cert/cert.pem"
+      keyFile: "../../../cert/key.pem"
+    csrf:
+      disabled: false
+      insecureCookie: false
+    cors:
+      disabled: false
+      origins:
+        - http://localhost:8080
+        - https://accounts.google.com
+  logger:
+    level: env:LOG_LEVEL|DEBUG
+    format: json
+  repo:
+    sqlite:
+      url: env:SQLITE_URL|./db.sqlite
+      debug: true
+  kv:
+    sqlite:
+      url: env:KV_SQLITE_URL|./kv.sqlite
+  scanner:
+    enableScanEndpoint: true
+    enableScanButton: true
+    scanBeforeStart: true
+  search:
+    bluge:
+locations:
+  github:
+    - owner: backstage
+      repo: backstage
+      branch: master
+      accessToken: env:GITHUB_ACCESS_TOKEN
+      depth: 1
+      paths:
+        - packages/catalog-model/examples
+        - plugins/techdocs-backend/examples/documented-component
+oauth2:
+  disabled: false
+  jwtSecret: "secret"
+  clientId: env:OAUTH2_CLIENT_ID|client-id
+  clientSecret: env:OAUTH2_CLIENT_SECRET|secret
+  redirectUrl: env:OAUTH2_REDIRECT|https://localhost:8080/oauth2/callback
+  scopes:
+    - "https://www.googleapis.com/auth/userinfo.email"
+  endpoint:
+    authUrl: "https://accounts.google.com/o/oauth2/auth"
+    tokenUrl: "https://accounts.google.com/o/oauth2/token"
+  userInfo:
+    url: "https://www.googleapis.com/oauth2/v3/tokeninfo"
+    emailPath: "email"
+    emailVerifiedPath: "email_verified"

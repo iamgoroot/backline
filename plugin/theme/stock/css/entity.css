@@ -1,0 +1,57 @@
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+    height: fit-content;
+    background-color: var(--background-secondary);
+}
+
+.card:hover {
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 1vh -1vh 2vh var(--border-color);
+}
+
+.container-grid {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    .container-grid {
+        grid-template-columns:
+            repeat(auto-fill, 10rem) 20%;
+    }
+}
+
+.entity-info-container {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: fit-content(40%) fit-content(40%) 1fr;
+    grid-auto-flow:  dense;
+}
+
+.tab-bar {
+    display: flex;
+    justify-content: left;
+    background-color: var(--background-secondary);
+    color: var(--text-color);
+    border-radius: 1vh;
+    padding: 0.5rem;
+    padding-inline: 1rem;
+}
+.tab-item {
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 1.3rem;
+    padding: 1rem;
+    border-radius: 1vh;
+    background-color: var(--background-secondary);
+}
+
+.tab-item:hover {
+    box-shadow: 0.5vh -0.5vh 1.5vh var(--border-color);
+}

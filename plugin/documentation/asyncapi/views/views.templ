@@ -1,0 +1,72 @@
+package views
+
+import (
+	"github.com/iamgoroot/backline/pkg/model"
+	"strings"
+	"fmt"
+)
+
+templ HTMLHeaders() {
+    <script src="https://unpkg.com/@asyncapi/react-component@latest/browser/standalone/index.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@asyncapi/react-component@latest/styles/default.css">
+}
+
+templ EntityTab(entity *model.Entity) {
+    if supported(entity) && entity.Spec.Definition != nil {
+        {{ specURL := fmt.Sprintf("/asyncapi-viewer/spec/by-fullname/%s", entity.FullName) }}
+        <div id="asyncapi-container" style="width:100%; height:100%;"></div>
+        @templ.JSONScript("specURL", specURL)
+        <script>
+            (function() {
+                const specUrl = JSON.parse(window.specURL.textContent);
+                
+                function initAsyncAPI() {
+                    const host = document.getElementById('asyncapi-container');
+                    const shadow = host.attachShadow({ mode: 'open' });
+                    
+                    shadow.innerHTML = `
+                        <style>
+                            @import url("https://unpkg.com/@asyncapi/react-component@latest/styles/default.css");
+                        </style>
+                        <div id="asyncapi-ui"></div>
+                    `;
+
+                    // Initialize AsyncAPI React component
+                    AsyncApiStandalone.render({
+                        schema: {
+                            url: specUrl
+                        },
+                        config: {
+                            show: {
+                                sidebar: true,
+                                scrollSync: true
+                            }
+                        }
+                    }, shadow.getElementById('asyncapi-ui'));
+                }
+
+                // Handle document ready state
+                if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                    initAsyncAPI();
+                } else {
+                    document.addEventListener('DOMContentLoaded', initAsyncAPI);
+                }
+            })();
+        </script>
+    }
+}
+
+templ EntityTabLink(entity *model.Entity) {
+    if supported(entity) && entity.Spec.Definition != nil {
+        {{ link := fmt.Sprintf("/asyncapi-viewer/render/by-fullname/%s", entity.FullName) }}
+        <a class="tab-item" 
+           hx-get={ link } 
+           hx-target="#tab-content">
+            AsyncAPI Viewer
+        </a>
+    }
+}
+
+func supported(entity *model.Entity) bool {
+    return strings.EqualFold(entity.Spec.Type, "asyncapi")
+}
