@@ -21,8 +21,10 @@ Backline is a minimalistic Internal Developer Portal (IDP) inspired by Backstage
 
 # Demo
 
-Check out [deployed demo app](https://backline-b0792b787812.herokuapp.com/) loaded with same entities that backstage use
-for their demo app and backstage itself
+Check out deployed demo app loaded with same entities that backstage use for their demo app and backstage itself:
+
+[https://backline-demo.koyeb.app](https://backline-demo.koyeb.app)
+[https://backline.onrender.com](https://backline.onrender.com)
 
 Some features may be disabled (for example "Scan" button)
 
