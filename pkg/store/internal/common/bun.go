@@ -148,7 +148,7 @@ func (m baseRepo) GetByName(ctx context.Context, name string) (*model.Entity, er
 	return entityModel, err
 }
 
-func (m baseRepo) UpdateAsOrphans(ctx context.Context, at *time.Time, entityNames ...string) error {
+func (m baseRepo) UpdateAsOrphans(ctx context.Context, orphanedAt *time.Time, entityNames ...string) error {
 	if len(entityNames) == 0 {
 		return nil
 	}
@@ -156,8 +156,9 @@ func (m baseRepo) UpdateAsOrphans(ctx context.Context, at *time.Time, entityName
 	return m.db.RunInTx(ctx, nil, func(ctx context.Context, tx bun.Tx) error {
 		_, err := tx.NewUpdate().Model((*bunmodel.StoredEntity)(nil)).
 			Where("full_name IN (?)", bun.In(entityNames)).
-			Set("orphaned_at = ?", at).
+			Set("orphaned_at = ?", orphanedAt).
 			Exec(ctx)
+
 		return err
 	})
 }

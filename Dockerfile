@@ -1,7 +1,10 @@
-FROM golang:1.24 AS builder
+FROM golang:1.24-alpine AS builder
 ARG GITHUB_ACCESS_TOKEN
 WORKDIR /app
 COPY . .
+RUN apk add --no-cache ca-certificates
+RUN update-ca-certificates
+
 ENV GOCACHE=/root/.cache/go-build
 
 ENV SQLITE_URL=file:./db.sqlite
@@ -16,6 +19,7 @@ COPY --from=builder /app/backline /
 COPY --from=builder /app/cmd/webapp/config.yaml /
 COPY --from=builder /app/db.sqlite /
 COPY --from=builder /app/kv.sqlite /
+COPY --from=builder /bluge-index /bluge-index
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 ENTRYPOINT ["/backline", "--config", "/config.yaml"]

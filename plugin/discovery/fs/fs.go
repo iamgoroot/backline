@@ -13,7 +13,7 @@ import (
 
 var _ core.Discovery = &Discovery{}
 
-const configKey = "$.locations.dir"
+const configKey = "$.locations.fs"
 
 type Discovery struct {
 	core.NoOpShutdown

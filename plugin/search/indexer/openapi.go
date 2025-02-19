@@ -50,10 +50,20 @@ func (plugin *OpenAPIIndexer) ProcessEntity(ctx context.Context, deps core.Depen
 	err = errors.Join(
 		handleSpec(spec, indexFunc, "info", "title"),
 		handleSpec(spec, indexFunc, "info", "description"),
-		handleSpec(spec, indexFunc, "paths", "*", "description"),
+
+		handleSpec(spec, indexFunc, "tags", "name"),
+		handleSpec(spec, indexFunc, "tags", "description"),
+
+		handleSpec(spec, indexFunc, "paths", "*", "*", "summary"),
+		handleSpec(spec, indexFunc, "paths", "*", "*", "description"),
+		handleSpec(spec, indexFunc, "paths", "*", "*", "requestBody", "description"),
+		handleSpec(spec, indexFunc, "paths", "*", "*", "responses", "description"),
+
+		handleSpec(spec, indexFunc, "paths", "*", "*", "parameters", "name"),
+		handleSpec(spec, indexFunc, "paths", "*", "*", "parameters", "description"),
 	)
 	if err != nil {
-		deps.Logger().Info("error while indexing openapi definition of entity",
+		deps.Logger().Warn("error while indexing openapi definition of entity",
 			slog.String("entity", entity.FullName),
 			slog.String("error", err.Error()))
 	}

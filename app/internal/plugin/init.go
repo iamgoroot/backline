@@ -62,6 +62,7 @@ func processAppPlugins(plugins *plugins, appPlugins ...core.Plugin) {
 		if plug == nil {
 			continue
 		}
+
 		if header, ok := plug.(core.HeaderPlugin); ok {
 			plugins.headerPlugins = append(plugins.headerPlugins, core.StyledComponent{Component: header.HeaderItem(), Class: "headerItem"})
 		}

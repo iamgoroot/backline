@@ -2,8 +2,9 @@ package rawdefinition
 
 import (
 	"context"
-	"github.com/iamgoroot/backline/plugin/documentation/rawdefinition/internal/views"
 	"strings"
+
+	"github.com/iamgoroot/backline/plugin/documentation/rawdefinition/internal/views"
 
 	"github.com/iamgoroot/backline/pkg/core"
 	"github.com/iamgoroot/backline/pkg/model"
@@ -28,5 +29,6 @@ func (Plugin) EntityTabLink(entity *model.Entity) core.Component {
 	if entity.Spec.Definition == nil || !strings.EqualFold(entity.Kind, "api") {
 		return core.EmptyComponent{}
 	}
+
 	return core.WeighedComponent{Component: views.TabLink(entity.FullName)}
 }

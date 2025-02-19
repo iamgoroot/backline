@@ -20,18 +20,16 @@ core:
   repo:
     pg:
       dsn: env:PG_DSN|postgres://myuser:mypassword@localhost:5432/backline?sslmode=disable
-      debug: true
   kv:
     pg:
       dsn: env:PG_DSN|postgres://myuser:mypassword@localhost:5432/backline?sslmode=disable
-      debug: true
   lock:
     pg:
       dsn: env:PG_DSN|postgres://myuser:mypassword@localhost:5432/backline?sslmode=disable
-      debug: true
   search:
     elastic:
-      addresses: http://localhost:9200
+      addresses:
+        - http://localhost:9200
       username: elastic
       password: changeme
       indexName: backline-search
@@ -40,15 +38,15 @@ core:
     enableScanButton: true
     scanBeforeStart: true
 locations:
-  # - type: dir
-    # location: /backstage/examples
+  fs:
+    - "/home/user/dev/ent"
   github:
     - owner: backstage
       repo: backstage
       branch: master
       accessToken: env:GITHUB_ACCESS_TOKEN
-      depth: 3
-      paths: 
+      depth: 1
+      paths:
         - packages/catalog-model/examples
 oauth2:
   disabled: false

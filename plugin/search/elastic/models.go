@@ -33,3 +33,14 @@ type errResponse struct {
 		Type   string `json:"type"`
 	} `json:"error"`
 }
+
+type deleteQuery struct {
+	Query struct {
+		Terms map[string][]string `json:"terms"`
+	} `json:"query"`
+}
+
+type deleteResponse struct {
+	Errors  []interface{} `json:"failures"`
+	Deleted int           `json:"deleted"`
+}

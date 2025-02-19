@@ -9,7 +9,12 @@ import (
 	"github.com/iamgoroot/backline/plugin/search/ui"
 )
 
-const defaultSearchIndexName = "backline-search"
+const (
+	defaultSearchIndexName = "backline-search"
+	configKey              = "$.core.search.elastic"
+)
+
+var _ core.Search = &Search{}
 
 type Cfg struct {
 	IndexName              string   `yaml:"indexName"`
@@ -31,7 +36,7 @@ type Search struct {
 }
 
 func (plugin *Search) Setup(ctx context.Context, deps core.Dependencies) error {
-	err := deps.CfgReader().ReadAt("$.search.elastic", &plugin.cfg)
+	err := deps.CfgReader().ReadAt(configKey, &plugin.cfg)
 	if err != nil {
 		return err
 	}

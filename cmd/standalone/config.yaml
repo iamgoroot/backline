@@ -30,6 +30,7 @@ core:
     scanBeforeStart: true
   search:
     bluge:
+      location: /bluge-index
 locations:
   github:
     - owner: backstage

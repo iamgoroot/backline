@@ -12,7 +12,10 @@ import (
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 )
 
-var errIndexCreationFailed = fmt.Errorf("elasticsearch index creation failed")
+var (
+	errIndexCreationFailed = fmt.Errorf("elasticsearch index creation failed")
+	errDeletionFailed      = fmt.Errorf("elasticsearch index deletion failed")
+)
 
 func (plugin *Search) Index(ctx context.Context, entityName, ref, category, value string) error {
 	if value == "" {
@@ -54,6 +57,46 @@ func (plugin *Search) Index(ctx context.Context, entityName, ref, category, valu
 	if res.IsError() {
 		msg, _ := io.ReadAll(res.Body)
 		return fmt.Errorf("%w: %s", errIndexCreationFailed, string(msg))
+	}
+
+	return nil
+}
+
+func (plugin *Search) RemoveIndex(ctx context.Context, entityName ...string) error {
+	query := deleteQuery{}
+	query.Query.Terms = map[string][]string{
+		"entityName": entityName,
+	}
+
+	queryJSON, err := json.Marshal(query)
+	if err != nil {
+		return err
+	}
+
+	req := esapi.DeleteByQueryRequest{
+		Index:     []string{plugin.cfg.IndexName},
+		Body:      bytes.NewReader(queryJSON),
+		Conflicts: "proceed",
+	}
+
+	res, err := req.Do(ctx, plugin.client)
+	if err != nil {
+		return err
+	}
+
+	defer res.Body.Close()
+
+	var response deleteResponse
+	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
+		return err
+	}
+
+	if res.IsError() {
+		return fmt.Errorf("%w: %s", errDeletionFailed, res.String())
+	}
+
+	if len(response.Errors) > 0 {
+		return fmt.Errorf("%w: %v", errDeletionFailed, response.Errors)
 	}
 
 	return nil

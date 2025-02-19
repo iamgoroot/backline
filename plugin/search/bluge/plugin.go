@@ -4,43 +4,110 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
+	"sync"
+	"time"
+
 	"github.com/blugelabs/bluge"
-	"github.com/blugelabs/bluge/search/highlight"
+	"github.com/blugelabs/bluge/search"
+	segment "github.com/blugelabs/bluge_segment_api"
 	"github.com/iamgoroot/backline/pkg/core"
 	"github.com/iamgoroot/backline/plugin/search/ui"
-	"log"
 )
 
+const (
+	configKey           = "$.core.search.bluge"
+	readerReopenTimeout = 5 * time.Minute
+)
+
+var _ core.Search = &Search{}
+
 type Search struct {
-	ui.SearchView
 	cfg bluge.Config
+	ui.SearchView
+	reader       *bluge.Reader
+	writer       *bluge.Writer
+	readerTicker *time.Ticker
+	Config
+	mx sync.Mutex
+}
+
+type Config struct {
+	Location string `yaml:"location"`
 }
 
 func (plugin *Search) Setup(ctx context.Context, deps core.Dependencies) error {
-	plugin.cfg = bluge.DefaultConfig("./bluge-index")
+	err := deps.CfgReader().ReadAt(configKey, &plugin.Config)
+	if err != nil {
+		return err
+	}
+
+	if plugin.Location == "" {
+		plugin.Location = "./bluge-index"
+	}
+
+	plugin.readerTicker = time.NewTicker(readerReopenTimeout)
+	plugin.cfg = bluge.DefaultConfig(plugin.Location)
+
+	plugin.reader, err = plugin.ensureReader()
+	if err != nil {
+		return err
+	}
+
+	plugin.writer, err = bluge.OpenWriter(plugin.cfg)
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		for range plugin.readerTicker.C {
+			_, err := plugin.ensureReader()
+			if err != nil {
+				deps.Logger().Error("failed to reopen reader", slog.Any("error", err))
+			}
+		}
+	}()
+
 	return plugin.SearchView.Setup(ctx, deps)
 }
 
+func (plugin *Search) ensureReader() (*bluge.Reader, error) {
+	plugin.mx.Lock()
+	defer plugin.mx.Unlock()
+
+	if plugin.reader != nil {
+		return plugin.reader, nil
+	}
+
+	newReader, err := bluge.OpenReader(plugin.cfg)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", errFailedOpeningBlugeReader, err)
+	}
+
+	plugin.reader = newReader
+
+	return plugin.reader, nil
+}
+
 func (plugin *Search) Shutdown(_ context.Context) error {
-	return nil
+	plugin.readerTicker.Stop()
+
+	return errors.Join(
+		plugin.writer.Close(),
+		plugin.reader.Close(),
+	)
 }
 
-func (plugin *Search) Search(_ context.Context, query string, offset, limit int) ([]core.SearchResult, error) {
-	reader, err := bluge.OpenReader(plugin.cfg)
-	if err != nil {
-		log.Fatalf("error getting index reader: %v", err)
-	}
-
-	defer reader.Close()
-
-	q := bluge.NewFuzzyQuery(query).SetField("value").SetFuzziness(1)
-	request := bluge.NewTopNSearch(limit, q).SetFrom(offset).IncludeLocations()
-	documentMatchIterator, err := reader.Search(context.Background(), request)
+func executeRequest[T any](
+	ctx context.Context,
+	reader *bluge.Reader,
+	request bluge.SearchRequest,
+	visitorMaker func(match *search.DocumentMatch, value *T) segment.StoredFieldVisitor,
+) ([]T, error) {
+	documentMatchIterator, err := reader.Search(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	highligher := highlight.NewHTMLHighlighter()
-	var searchResults []core.SearchResult
 
 	match, err := documentMatchIterator.Next()
 
@@ -48,107 +115,25 @@ func (plugin *Search) Search(_ context.Context, query string, offset, limit int)
 		return nil, err
 	}
 
+	results := make([]T, 0, match.Size())
+
 	for match != nil {
-		result := core.SearchResult{}
-		err = match.VisitStoredFields(func(field string, value []byte) bool {
-			switch field {
-			case "link":
-				result.Link = string(value)
-			case "entityName":
-				result.EntityName = string(value)
-			case "category":
-				result.Category = string(value)
-			case "value":
-				result.Highlight = highligher.BestFragment(match.Locations["value"], value)
-			}
-			return true
-		})
+		var result T
+		visitor := visitorMaker(match, &result)
+
+		err = match.VisitStoredFields(visitor)
+
 		if err != nil {
 			return nil, err
 		}
 
-		searchResults = append(searchResults, result)
-
+		results = append(results, result)
 		match, err = documentMatchIterator.Next()
 
 		if err != nil {
-			return nil, err
+			return results, err
 		}
 	}
 
-	return searchResults, nil
-}
-
-func (plugin *Search) Index(_ context.Context, entityName, ref, category, value string) error {
-	writer, err := bluge.OpenWriter(plugin.cfg)
-
-	if err != nil {
-		return err
-	}
-
-	defer writer.Close()
-
-	id := fmt.Sprintf("%s#%s", entityName, category)
-
-	doc := bluge.NewDocument(id)
-
-	doc.AddField(bluge.NewTextField("value", value).SearchTermPositions().StoreValue().HighlightMatches())
-	doc.AddField(bluge.NewKeywordField("category", category).StoreValue())
-	doc.AddField(bluge.NewKeywordField("entityName", entityName).StoreValue())
-	doc.AddField(bluge.NewKeywordField("link", ref).StoreValue())
-
-	return writer.Update(doc.ID(), doc)
-}
-func (plugin *Search) RemoveIndex(ctx context.Context, entityName ...string) error {
-	var err error
-	for _, entityName := range entityName {
-		err = errors.Join(err, plugin.getIDs(ctx, entityName)) //TODO: reuse writer/reader
-	}
-	return err
-}
-func (plugin *Search) getIDs(ctx context.Context, entityName string) error {
-	writer, err := bluge.OpenWriter(plugin.cfg)
-
-	if err != nil {
-		return err
-	}
-
-	defer writer.Close()
-	reader, err := writer.Reader()
-	q := bluge.NewTermQuery(entityName).SetField("entityName") //use multi term query
-	request := bluge.NewAllMatches(q)
-
-	documentMatchIterator, err := reader.Search(context.Background(), request)
-	if err != nil {
-		return err
-	}
-	match, err := documentMatchIterator.Next()
-
-	if err != nil {
-		return err
-	}
-	var allErrs error
-
-	for match != nil {
-		err = match.VisitStoredFields(func(field string, value []byte) bool {
-			if field == "_id" {
-				id := string(value)
-				deleteErr := writer.Delete(bluge.Identifier(id))
-				allErrs = errors.Join(allErrs, deleteErr)
-			}
-			return true
-		})
-
-		if err != nil {
-			allErrs = errors.Join(allErrs, err)
-		}
-
-		match, err = documentMatchIterator.Next()
-
-		if err != nil {
-			allErrs = errors.Join(allErrs, err)
-		}
-	}
-
-	return allErrs
+	return results, nil
 }

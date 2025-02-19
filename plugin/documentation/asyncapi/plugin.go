@@ -3,6 +3,9 @@ package asyncapi
 import (
 	"context"
 
+	"github.com/iamgoroot/backline/plugin/catalog/render"
+	"github.com/labstack/echo/v4"
+
 	"github.com/iamgoroot/backline/pkg/core"
 	"github.com/iamgoroot/backline/pkg/model"
 	"github.com/iamgoroot/backline/plugin/documentation/asyncapi/views"
@@ -18,6 +21,16 @@ type Plugin struct {
 }
 
 func (p Plugin) Setup(_ context.Context, deps core.Dependencies) error {
+	deps.Router().GET("asyncapi-viewer/view/by-fullname/:fullname", func(reqCtx echo.Context) error {
+		entity, err := resolveEntity(deps, reqCtx)
+		if err != nil {
+			return err
+		}
+
+		content := views.EntityTab(entity)
+
+		return render.ViewEntityContent(deps.Plugins(), reqCtx, entity, content)
+	})
 	deps.Router().GET("asyncapi-viewer/render/by-fullname/:fullname", handlers{Dependencies: deps}.entityTabHandler)
 	// mount raw definition endpoint for reading spec
 	deps.Router().GET(
@@ -26,6 +39,13 @@ func (p Plugin) Setup(_ context.Context, deps core.Dependencies) error {
 	)
 
 	return nil
+}
+
+func resolveEntity(deps core.Dependencies, c echo.Context) (*model.Entity, error) {
+	ctx := c.Request().Context()
+	fullName := c.Param("fullname")
+
+	return deps.Repo().GetByName(ctx, fullName)
 }
 
 func (Plugin) EntityTabLink(entity *model.Entity) core.Component {

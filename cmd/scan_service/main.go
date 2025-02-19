@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/iamgoroot/backline/plugin/scanner"
-	"github.com/iamgoroot/backline/plugin/search/bluge"
 	"log/slog"
 	"os"
+
+	"github.com/iamgoroot/backline/plugin/scanner"
+	"github.com/iamgoroot/backline/plugin/search/bluge"
+	"github.com/iamgoroot/backline/plugin/search/indexer"
 
 	"github.com/iamgoroot/backline/app"
 	"github.com/iamgoroot/backline/pkg/core"
@@ -31,6 +33,8 @@ func main() {
 		},
 		Plugins: []core.Plugin{
 			&techdocs.Plugin{}, // add techdocs documentation plugin
+			indexer.BaseEntityInfo{},
+			&indexer.OpenAPIIndexer{},
 		},
 	}
 

@@ -1,19 +1,20 @@
 package bunmodel
 
 import (
-	"github.com/iamgoroot/backline/pkg/model"
 	"time"
+
+	"github.com/iamgoroot/backline/pkg/model"
 )
 
 type StoredEntity struct {
+	OrphanedAt *time.Time
+	model.Profile
 	FullName   string `bun:",pk,unique"`
 	UnkindName string
 	APIVersion string
 	Kind       string
-	model.Profile
 	Spec
 	model.Metadata
-	OrphanedAt *time.Time
 }
 
 type Spec struct {

@@ -59,8 +59,11 @@ templ EntityTab(entity *model.Entity) {
 templ EntityTabLink(entity *model.Entity) {
     if supported(entity) && entity.Spec.Definition != nil {
         {{ link := fmt.Sprintf("/asyncapi-viewer/render/by-fullname/%s", entity.FullName) }}
+        {{ viewLink := fmt.Sprintf("/asyncapi-viewer/view/by-fullname/%s", entity.FullName) }}
+
         <a class="tab-item" 
-           hx-get={ link } 
+           hx-get={ link }
+           hx-push-url={ viewLink }
            hx-target="#tab-content">
             AsyncAPI Viewer
         </a>

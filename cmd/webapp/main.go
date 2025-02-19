@@ -1,12 +1,13 @@
 package main
 
 import (
+	"log/slog"
+	"os"
+
 	"github.com/iamgoroot/backline/plugin/auth/oauth2"
 	"github.com/iamgoroot/backline/plugin/documentation/asyncapi"
 	"github.com/iamgoroot/backline/plugin/documentation/swaggerui"
 	"github.com/iamgoroot/backline/plugin/search/bluge"
-	"log/slog"
-	"os"
 
 	"github.com/iamgoroot/backline/app"
 	"github.com/iamgoroot/backline/pkg/core"

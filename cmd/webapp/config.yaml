@@ -24,6 +24,7 @@ core:
       url: env:KV_SQLITE_URL|./kv.sqlite
   search:
     bluge:
+      location: /bluge-index
 oauth2:
   disabled: false
   jwtSecret: "secret"

@@ -18,7 +18,7 @@ const lockCfgPath = "$.core.lock"
 
 type lockCfg repoCfg
 
-func (m *Locker) Setup(_ context.Context, deps core.Dependencies) error {
+func (m *Locker) Setup(ctx context.Context, deps core.Dependencies) error {
 	cfg := &lockCfg{}
 
 	err := deps.CfgReader().ReadAt(lockCfgPath, cfg)
@@ -31,7 +31,7 @@ func (m *Locker) Setup(_ context.Context, deps core.Dependencies) error {
 		return core.ConfigurationError(lockCfgPath)
 	}
 
-	return nil
+	return m.DistributedLock.Setup(ctx, deps)
 }
 
 func resolveLocker(logger core.Logger, cfg *lockCfg) core.DistributedLock {

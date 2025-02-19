@@ -12,6 +12,9 @@ core:
       url: env:KV_SQLITE_URL|./kv.sqlite
   scanner:
     scanBeforeStart: true
+  search:
+    bluge:
+      location: /bluge-index
 locations:
   github:
     - owner: backstage
