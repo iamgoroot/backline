@@ -30,12 +30,14 @@ jobs:
         modules: ${{ fromJSON(needs.detect-modules.outputs.modules) }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
+
       - name: golangci-lint ${{ matrix.modules }}
         uses: golangci/golangci-lint-action@v6
         with:
           version: ${{ env.GOLANGCI_LINT_VERSION }}
           working-directory: ${{ matrix.modules }}
-          args: --modules-download-mode mod --config ${{ github.workspace }}/.golangci.yaml ./...
+          args: --modules-download-mode readonly --config ${{ github.workspace }}/.golangci.yaml ./...
