@@ -17,7 +17,7 @@ import (
 
 const (
 	configKey           = "$.core.search.bluge"
-	readerReopenTimeout = 5 * time.Minute
+	readerReopenTimeout = 5 * time.Second
 )
 
 var _ core.Search = &Search{}
@@ -33,7 +33,8 @@ type Search struct {
 }
 
 type Config struct {
-	Location string `yaml:"location"`
+	Location        string        `yaml:"location"`
+	RefreshInterval time.Duration `yaml:"refreshInterval"`
 }
 
 func (plugin *Search) Setup(ctx context.Context, deps core.Dependencies) error {
@@ -46,13 +47,12 @@ func (plugin *Search) Setup(ctx context.Context, deps core.Dependencies) error {
 		plugin.Location = "./bluge-index"
 	}
 
-	plugin.readerTicker = time.NewTicker(readerReopenTimeout)
-	plugin.cfg = bluge.DefaultConfig(plugin.Location)
-
-	plugin.reader, err = plugin.ensureReader()
-	if err != nil {
-		return err
+	timeout := readerReopenTimeout
+	if plugin.RefreshInterval > 0 {
+		timeout = plugin.RefreshInterval
 	}
+	plugin.readerTicker = time.NewTicker(timeout)
+	plugin.cfg = bluge.DefaultConfig(plugin.Location)
 
 	plugin.writer, err = bluge.OpenWriter(plugin.cfg)
 	if err != nil {
@@ -114,8 +114,11 @@ func executeRequest[T any](
 	if err != nil {
 		return nil, err
 	}
-
-	results := make([]T, 0, match.Size())
+	var size int
+	if match != nil {
+		size = match.Size()
+	}
+	results := make([]T, 0, size)
 
 	for match != nil {
 		var result T

@@ -1,12 +1,11 @@
 package main
 
 import (
-	"log/slog"
-	"os"
-
 	"github.com/iamgoroot/backline/plugin/scanner"
 	"github.com/iamgoroot/backline/plugin/search/bluge"
 	"github.com/iamgoroot/backline/plugin/search/indexer"
+	"log/slog"
+	"os"
 
 	"github.com/iamgoroot/backline/app"
 	"github.com/iamgoroot/backline/pkg/core"
@@ -29,12 +28,14 @@ func main() {
 			JobScheduler:      &store.Scheduler{}, // add job scheduler plugin configurable with config file. supports pg and sqlite
 			DistributedLocker: &store.Locker{},    // add distributed lock plugin configurable with config file. supports pg and sqlite
 			ScannerPlugin:     &scanner.Plugin{},  // add scanner plugin to scan/read entities
-			SearchPlugin:      &bluge.Search{},
+			SearchPlugin:      &bluge.Search{},    // add search plugin to allow entity search
 		},
 		Plugins: []core.Plugin{
 			&techdocs.Plugin{}, // add techdocs documentation plugin
-			indexer.BaseEntityInfo{},
-			&indexer.OpenAPIIndexer{},
+
+			indexer.BaseEntityInfo{},  // indexes common entity info while scanning
+			&indexer.OpenAPIIndexer{}, // indexes openapi specs
+			&indexer.AsyncAPI{},       // indexes asyncapi specs
 		},
 	}
 

@@ -18,7 +18,6 @@ const scannerCfgKey = "$.core.scanner"
 
 type Cfg struct {
 	ScanPeriod         time.Duration `yaml:"scanPeriod"`
-	EnablePeriodicScan bool          `yaml:"enablePeriodicScan"`
 	EnableScanEndpoint bool          `yaml:"enableScanEndpoint"`
 	EnableScanButton   bool          `yaml:"enableScanButton"`
 	ScanBeforeStart    bool          `yaml:"scanBeforeStart"`
@@ -44,7 +43,7 @@ func (p *Plugin) Setup(ctx context.Context, deps core.Dependencies) error {
 		}
 	}
 
-	if p.cfg.EnablePeriodicScan {
+	if p.cfg.ScanPeriod > 0 {
 		go func() {
 			err := p.ScanPeriodically(ctx, deps, p.cfg.ScanPeriod)
 			deps.Logger().Error("failed to start periodic scan", slog.Any("err", err))

@@ -42,46 +42,98 @@ Some features may be disabled (for example "Scan" button)
   - Plugins register themselves and do not require any code modifications.
   - Plugins implement statically typed interfaces, making them easy to implement and detect version incompatibilities.
 - **Addressing Backstage issues**:
+  - Backstage does not support search on openapi and asyncapi specs (closed as not planned [backstage/backstage#22802](https://github.com/backstage/backstage/issues/22802)).
   - Backstage does not respect some relations like `apiProvidedBy` out of the box [backstage/backstage#25387](https://github.com/backstage/backstage/issues/25387).
   - Plugins use different HTTP clients that may not respect proxy settings [help-im-behind-a-corporate-proxy](https://github.com/backstage/backstage/blob/master/contrib/docs/tutorials/help-im-behind-a-corporate-proxy.md).
 
 ## Getting Started
 
-To get started with Backline with default plugins, run:
+To get started with Backline you need to add as least few plugins or specify implementations for core functionality
 
-```bash
-go run github.com/iamgoroot/backline/cmd/backline --config {your-config-location}/config.yaml
-```
+Lets start with a simple example of running just catalog and scanner with minimalistic set of plugins
 
-This will run Backline with default plugins. You can also run it within your own application as a library:
+We'll use:
+
+* Postgres for storage (both entity and as Key-Value) and distributed lock (using pg_try_advisory_xact_lock)
+
 
 ```golang
-application := app.App{
-    // run catalog and scanner
-    PluggableDeps: app.PluggableDeps{
-        EntityDiscoveries: []core.Discovery{ // Add Location Readers so Backline knows how to read entities from different sources
-            &fs.Discovery{}, &github.Discovery{},
-        },
-        EntityRepo:        &store.Repo{},      // set repository plugin configurable with config file. supports pg and sqlite
-        KeyValStore:       &store.KV{},        // set key-value storage plugin configurable with config file. supports pg and sqlite
-        JobScheduler:      &store.Scheduler{}, // set job scheduler plugin configurable with config file. supports pg and sqlite
-        DistributedLocker: &store.Locker{},    // set distributed lock plugin configurable with config file. supports pg and sqlite
-    },
-    Plugins: []core.Plugin{
-        catalog.Plugin{}, // add web interface for catalog
-        oauth2.Plugin{},  // add oauth2 plugin for catalog authentication
-        stock.Theme{},    // add stock theme for catalog
-        &techdocs.Plugin{}, // add techdocs documentation plugin
-        &scanner.Plugin{}, // add scanner plugin to scan/read entities
-        openapiexplorer.Plugin{}, // add ability to display openapi specs on entity pages
-        rawdefinition.Plugin{},   // add ability to display raw API definitions on entity pages
-    },
-}
+	application := app.App{
+		// run catalog and scanner
 
-err := application.Run()
+		PluggableDeps: app.PluggableDeps{
+			EntityDiscoveries: []core.Discovery{    // Add Location Readers so backline knows how to read entities from different sources
+				&fs.Discovery{},                      // github repo to search entities
+			},
+			EntityRepo:         &pg.Repo{},         //use postgres implementation explicitly.
+			KeyValStore:        &kv.PgKV{},         // use postgres KV store explicitly.
+			JobScheduler:       &store.Scheduler{}, // job scheduler plugin. Basic implementation that uses KV store and Locker for scheduling and synchronizing tasks
+			DistributedLocker:  &store.Locker{},    // distributed lock plugin configurable with config file. Uses pg_try_advisory_xact_lock for pg and sql table with transaction is used for sqlite
+			ScannerPlugin:      &scanner.Plugin{},  // add scanner plugin to scan/read entities.
+		},
+		Plugins: []core.Plugin{
+			catalog.Plugin{},                       // add web interface for catalog
+			stock.Theme{},                          // add stock theme for catalog
+		},
+	}
+
+  err := application.Run()
+  if err != nil {
+    log.Fatal(err)
+  }
 ```
 
-Check out the example config at `backline/cmd/config.yaml`.
+Although configuration can be done by populating plugin fields directly in the code, we will use a configuration file
+For sake of simplicity we will disable some security features (https, csrf, cors are enabled by default)
+
+
+```yaml
+core:
+  server:
+    https:
+      disabled: true
+    csrf:
+      disabled: true
+    cors:
+      disabled: true
+  logger:
+    level: env:LOG_LEVEL
+    format: json
+  repo:
+    pg:
+      dsn: env:PG_DSN
+  kv:
+    pg:
+      dsn: env:PG_DSN
+  lock:
+    pg:
+      dsn: env:PG_DSN
+  scanner:
+    enableScanEndpoint: true
+    enableScanButton: true
+locations:
+  fs:
+    - "./entities"
+
+```
+
+You can populate config file directly or use env variables for config values
+
+```env
+PG_DSN=postgresql://postgres:postgres@localhost:5432/backline?sslmode=disable
+LOG_LEVEL=INFO
+```
+
+Run the application
+
+```bash
+go run main.go --config {your-config-location}/config.yaml
+```
+
+Open [http://localhost:8080](http://localhost:8080) and you should see the catalog UI. Click on `Scan entities` button to start scanning entities in directory `./entities`
+
+See more examples in `./examples` directory
+
 
 ## Customization
 
@@ -92,7 +144,7 @@ You can customize the appearance and functionality of Backline by modifying the 
 To run entity scan in a separate process:
 
 ```bash
-go run github.com/iamgoroot/backline/cmd/scan_service --config {your-config-location}/config.yaml
+go run github.com/iamgoroot/backline/examples/scan_service --config {your-config-location}/config.yaml
 ```
 
 Or run entity scan as a library:
@@ -111,7 +163,7 @@ err := application.Run()
 To run catalog UI in a separate process, run:
 
 ```bash
-go run github.com/iamgoroot/backline/cmd/webapp --config {your-config-location}/config.yaml
+go run github.com/iamgoroot/backline/examples/webapp --config {your-config-location}/config.yaml
 ```
 
 Or run catalog UI as a library in an existing service:

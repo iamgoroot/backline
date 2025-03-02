@@ -1,0 +1,27 @@
+core:
+  server:
+    https:
+      disabled: true
+    csrf:
+      disabled: true
+    cors:
+      disabled: true
+  logger:
+    level: env:LOG_LEVEL
+    format: json
+  repo:
+    pg:
+      dsn: env:PG_DSN
+  kv:
+    pg:
+      dsn: env:PG_DSN
+  lock:
+    pg:
+      dsn: env:PG_DSN
+  scanner:
+    enableScanEndpoint: true
+    enableScanButton: true
+    enablePeriodicScan: true
+locations:
+  fs:
+    - "./entities"

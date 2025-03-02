@@ -45,7 +45,7 @@ locations:
       repo: backstage
       branch: master
       accessToken: env:GITHUB_ACCESS_TOKEN
-      depth: 1
+      depth: 2
       paths:
         - packages/catalog-model/examples
 oauth2:

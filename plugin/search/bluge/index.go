@@ -30,13 +30,12 @@ func (plugin *Search) RemoveIndex(ctx context.Context, entityName ...string) err
 	}
 
 	for _, entityName := range entityName {
-		err = errors.Join(err, plugin.getIDs(ctx, reader, plugin.writer, entityName))
+		err = errors.Join(err, plugin.removeEntity(ctx, reader, plugin.writer, entityName))
 	}
-
 	return err
 }
 
-func (plugin *Search) getIDs(ctx context.Context, reader *bluge.Reader, writer *bluge.Writer, entityName string) error {
+func (plugin *Search) removeEntity(ctx context.Context, reader *bluge.Reader, writer *bluge.Writer, entityName string) error {
 	q := bluge.NewTermQuery(entityName).SetField("entityName") //TODO: use multi term query
 	request := bluge.NewAllMatches(q)
 
