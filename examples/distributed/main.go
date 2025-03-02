@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/iamgoroot/backline/plugin/search/elastic"
 	"log/slog"
 	"os"
+
+	"github.com/iamgoroot/backline/plugin/search/elastic"
 
 	"github.com/iamgoroot/backline/plugin/scanner"
 

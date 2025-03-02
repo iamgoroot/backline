@@ -1,4 +1,4 @@
-module github.com/iamgoroot/backline/examples/webapp
+module github.com/iamgoroot/backline/examples/split/webapp
 
 go 1.24.0
 

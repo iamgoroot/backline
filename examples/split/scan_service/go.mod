@@ -1,4 +1,4 @@
-module github.com/iamgoroot/backline/examples/scan_service
+module github.com/iamgoroot/backline/examples/split/scan_service
 
 go 1.24.0
 
@@ -90,13 +90,10 @@ require (
 replace (
 	github.com/iamgoroot/backline/app => ./../../../app
 	github.com/iamgoroot/backline/pkg => ./../../../pkg
-	github.com/iamgoroot/backline/plugin/auth/oauth2 => ./../../../plugin/auth/oauth2
 	github.com/iamgoroot/backline/plugin/catalog => ./../../../plugin/catalog
 	github.com/iamgoroot/backline/plugin/discovery/fs => ./../../../plugin/discovery/fs
 	github.com/iamgoroot/backline/plugin/discovery/github => ./../../../plugin/discovery/github
-	github.com/iamgoroot/backline/plugin/documentation/rawdefinition => ./../../../plugin/documentation/rawdefinition
 	github.com/iamgoroot/backline/plugin/documentation/techdocs => ./../../../plugin/documentation/techdocs
 	github.com/iamgoroot/backline/plugin/scanner => ./../../../plugin/scanner
-	github.com/iamgoroot/backline/plugin/theme/stock => ./../../../plugin/theme/stock
 
 )

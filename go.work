@@ -5,9 +5,10 @@ toolchain go1.24.0
 use (
 	./app
 	./examples/distributed
-	./examples/immutable/scan_service
+	./examples/simple
+	./examples/split/scan_service
+	./examples/split/webapp
 	./examples/standalone
-	./examples/immutable/webapp
 	./pkg
 	./plugin/auth/oauth2
 	./plugin/catalog
@@ -24,6 +25,4 @@ use (
 	./plugin/search/indexer
 	./plugin/search/ui
 	./plugin/theme/stock
-	./examples/example1
-
 )

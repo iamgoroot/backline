@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/iamgoroot/backline/app"
 	"github.com/iamgoroot/backline/pkg/core"
 	"github.com/iamgoroot/backline/pkg/store"
@@ -10,7 +12,6 @@ import (
 	"github.com/iamgoroot/backline/plugin/discovery/fs"
 	"github.com/iamgoroot/backline/plugin/scanner"
 	"github.com/iamgoroot/backline/plugin/theme/stock"
-	"log"
 )
 
 func main() {
@@ -21,7 +22,7 @@ func main() {
 			EntityDiscoveries: []core.Discovery{ // Add Location Readers so backline knows how to read entities from different sources
 				&fs.Discovery{}, // directory to search entities
 			},
-			EntityRepo:        &pg.Repo{},         //use postgres implementation explicitly. import "github.com/iamgoroot/backline/pkg/store/repo/pg"
+			EntityRepo:        &pg.Repo{},         // use postgres implementation explicitly. import "github.com/iamgoroot/backline/pkg/store/repo/pg"
 			KeyValStore:       &kv.PgKV{},         // use postgres KV store explicitly. import  "github.com/iamgoroot/backline/pkg/store/kv"
 			JobScheduler:      &store.Scheduler{}, // job scheduler plugin. Basic implementation that uses KV store and Locker for scheduling and synchronizing tasks
 			DistributedLocker: &store.Locker{},    // distributed lock plugin configurable with config file. Uses pg_try_advisory_xact_lock for pg and sql table with transaction is used for sqlite

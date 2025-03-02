@@ -32,6 +32,7 @@ func (plugin *Search) RemoveIndex(ctx context.Context, entityName ...string) err
 	for _, entityName := range entityName {
 		err = errors.Join(err, plugin.removeEntity(ctx, reader, plugin.writer, entityName))
 	}
+
 	return err
 }
 

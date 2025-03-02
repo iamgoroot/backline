@@ -81,6 +81,7 @@ func setupCORSMiddleware(router *echo.Echo, cfg *CoreCfg) {
 	if cfg.Server.CORS.Disabled {
 		return
 	}
+
 	router.Use(middleware.CORSWithConfig(
 		middleware.CORSConfig{
 			AllowCredentials: true,

@@ -51,6 +51,7 @@ func (plugin *Search) Setup(ctx context.Context, deps core.Dependencies) error {
 	if plugin.RefreshInterval > 0 {
 		timeout = plugin.RefreshInterval
 	}
+
 	plugin.readerTicker = time.NewTicker(timeout)
 	plugin.cfg = bluge.DefaultConfig(plugin.Location)
 
@@ -114,10 +115,12 @@ func executeRequest[T any](
 	if err != nil {
 		return nil, err
 	}
+
 	var size int
 	if match != nil {
 		size = match.Size()
 	}
+
 	results := make([]T, 0, size)
 
 	for match != nil {

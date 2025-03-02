@@ -51,6 +51,7 @@ func main() {
 
 			indexer.BaseEntityInfo{},
 			&indexer.OpenAPIIndexer{},
+			&indexer.AsyncAPI{},
 		},
 	}
 
