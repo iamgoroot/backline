@@ -8,30 +8,49 @@ require (
 	github.com/iamgoroot/backline/plugin/discovery/github v0.0.0-20250110021921-01b18c16a3a1
 	github.com/iamgoroot/backline/plugin/documentation/techdocs v0.0.0-20250110021921-01b18c16a3a1
 	github.com/iamgoroot/backline/plugin/scanner v0.0.0-20250110021921-01b18c16a3a1
+	github.com/iamgoroot/backline/plugin/search/bluge v0.0.0-20250219230517-431712432a82
+	github.com/iamgoroot/backline/plugin/search/indexer v0.0.0-20250219230517-431712432a82
 )
 
 require (
 	github.com/BurntSushi/toml v1.4.0 // indirect
+	github.com/RoaringBitmap/roaring v1.9.4 // indirect
 	github.com/a-h/templ v0.3.833 // indirect
+	github.com/axiomhq/hyperloglog v0.2.3 // indirect
+	github.com/bits-and-blooms/bitset v1.20.0 // indirect
+	github.com/blevesearch/go-porterstemmer v1.0.3 // indirect
+	github.com/blevesearch/mmap-go v1.0.4 // indirect
+	github.com/blevesearch/segment v0.9.1 // indirect
+	github.com/blevesearch/snowballstem v0.9.0 // indirect
+	github.com/blevesearch/vellum v1.1.0 // indirect
+	github.com/blugelabs/bluge v0.2.2 // indirect
+	github.com/blugelabs/bluge_segment_api v0.2.0 // indirect
+	github.com/blugelabs/ice v1.0.0 // indirect
+	github.com/blugelabs/ice/v2 v2.0.1 // indirect
+	github.com/caio/go-tdigest v3.1.0+incompatible // indirect
+	github.com/dgryski/go-metro v0.0.0-20250106013310-edb8663e5e33 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/goccy/go-yaml v1.15.23 // indirect
+	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/iamgoroot/backline/plugin/catalog v0.0.0-20250110021921-01b18c16a3a1 // indirect
 	github.com/iamgoroot/backline/plugin/discovery/fs v0.0.0-20250110021921-01b18c16a3a1 // indirect
+	github.com/iamgoroot/backline/plugin/search/ui v0.0.0-20250219230517-431712432a82 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/kr/pretty v0.3.1 // indirect
+	github.com/kamstrup/intmap v0.5.1 // indirect
+	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/labstack/echo/v4 v4.13.3 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v1.14.24 // indirect
+	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/oriser/regroup v0.0.0-20240925165441-f6bb0e08289e // indirect
 	github.com/puzpuzpuz/xsync/v3 v3.5.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
-	github.com/rogpeppe/go-internal v1.13.1 // indirect
 	github.com/samber/lo v1.49.1 // indirect
 	github.com/samber/slog-echo v1.15.1 // indirect
 	github.com/shurcooL/githubv4 v0.0.0-20240727222349-48295856cce7 // indirect
@@ -52,15 +71,14 @@ require (
 	go.abhg.dev/goldmark/frontmatter v0.2.0 // indirect
 	go.opentelemetry.io/otel v1.34.0 // indirect
 	go.opentelemetry.io/otel/trace v1.34.0 // indirect
-	golang.org/x/crypto v0.33.0 // indirect
+	golang.org/x/crypto v0.35.0 // indirect
 	golang.org/x/exp v0.0.0-20250215185904-eff6e970281f // indirect
-	golang.org/x/net v0.35.0 // indirect
+	golang.org/x/net v0.36.0 // indirect
 	golang.org/x/oauth2 v0.26.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/time v0.10.0 // indirect
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	mellium.im/sasl v0.3.2 // indirect
 	modernc.org/libc v1.61.13 // indirect
@@ -70,15 +88,15 @@ require (
 )
 
 replace (
-		github.com/iamgoroot/backline/app => ../../app
-    	github.com/iamgoroot/backline/pkg => ../../pkg
-    	github.com/iamgoroot/backline/plugin/discovery/github => ../../plugin/discovery/github
-    	github.com/iamgoroot/backline/plugin/documentation/techdocs => ../../plugin/documentation/techdocs
-    	github.com/iamgoroot/backline/plugin/documentation/rawdefinition => ../../plugin/documentation/rawdefinition
-    	github.com/iamgoroot/backline/plugin/scanner => ../../plugin/scanner
-    	github.com/iamgoroot/backline/plugin/theme/stock => ../../plugin/theme/stock
-    	github.com/iamgoroot/backline/plugin/auth/oauth2 => ../../plugin/auth/oauth2
-    	github.com/iamgoroot/backline/plugin/catalog => ../../plugin/catalog
-    	github.com/iamgoroot/backline/plugin/discovery/fs => ../../plugin/discovery/fs
+	github.com/iamgoroot/backline/app => ../../app
+	github.com/iamgoroot/backline/pkg => ../../pkg
+	github.com/iamgoroot/backline/plugin/auth/oauth2 => ../../plugin/auth/oauth2
+	github.com/iamgoroot/backline/plugin/catalog => ../../plugin/catalog
+	github.com/iamgoroot/backline/plugin/discovery/fs => ../../plugin/discovery/fs
+	github.com/iamgoroot/backline/plugin/discovery/github => ../../plugin/discovery/github
+	github.com/iamgoroot/backline/plugin/documentation/rawdefinition => ../../plugin/documentation/rawdefinition
+	github.com/iamgoroot/backline/plugin/documentation/techdocs => ../../plugin/documentation/techdocs
+	github.com/iamgoroot/backline/plugin/scanner => ../../plugin/scanner
+	github.com/iamgoroot/backline/plugin/theme/stock => ../../plugin/theme/stock
 
 )
