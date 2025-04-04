@@ -41,8 +41,7 @@ Some features may be disabled (for example "Scan" button)
 
 To get started with Backline you need to add as least few plugins or specify implementations for core functionality
 
-Lets start with a simple example of running just catalog and scanner with minimalistic set of plugins
-
+Let's start with a simple example of running just catalog and scanner with minimalistic set of plugins
 We will use the following plugins/features:
 
 * Discovery for entities on file system
