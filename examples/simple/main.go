@@ -19,14 +19,20 @@ func main() {
 		// run catalog and scanner
 
 		PluggableDeps: app.PluggableDeps{
-			EntityDiscoveries: []core.Discovery{ // Add Location Readers so backline knows how to read entities from different sources
+			// add Location Readers so backline knows how to read entities from different sources
+			EntityDiscoveries: []core.Discovery{
 				&fs.Discovery{}, // directory to search entities
 			},
-			EntityRepo:        &pg.Repo{},         // use postgres implementation explicitly. import "github.com/iamgoroot/backline/pkg/store/repo/pg"
-			KeyValStore:       &kv.PgKV{},         // use postgres KV store explicitly. import  "github.com/iamgoroot/backline/pkg/store/kv"
-			JobScheduler:      &store.Scheduler{}, // job scheduler plugin. Basic implementation that uses KV store and Locker for scheduling and synchronizing tasks
-			DistributedLocker: &store.Locker{},    // distributed lock plugin configurable with config file. Uses pg_try_advisory_xact_lock for pg and sql table with transaction is used for sqlite
-			ScannerPlugin:     &scanner.Plugin{},  // add scanner plugin to scan/read entities.
+			EntityRepo: &pg.Repo{}, // use postgres implementation explicitly.
+			// use postgres KV store explicitly.
+			KeyValStore: &kv.PgKV{},
+			// job scheduler plugin. Basic implementation that uses KV store and Locker for scheduling and synchronizing tasks
+			JobScheduler: &store.Scheduler{},
+			// distributed lock plugin configurable with config file.
+			// uses pg_try_advisory_xact_lock for pg or sql table with transaction for sqlite
+			DistributedLocker: &store.Locker{},
+			// add scanner plugin to scan/read entities.
+			ScannerPlugin: &scanner.Plugin{},
 		},
 		Plugins: []core.Plugin{
 			catalog.Plugin{}, // add web interface for catalog
