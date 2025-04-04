@@ -35,7 +35,7 @@ func (m *SqliteKV) Setup(ctx context.Context, deps core.Dependencies) error {
 	db := bun.NewDB(sqldb, sqlitedialect.New())
 	m.bunKV = bunKV{db: db, logger: deps.Logger()}
 
-	return m.bunKV.setup(ctx)
+	return m.setup(ctx)
 }
 
 func (m *SqliteKV) Shutdown(ctx context.Context) error {

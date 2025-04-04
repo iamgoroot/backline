@@ -6,6 +6,6 @@ update:
 generate:
 	go list -f '{{.Dir}}/...' -m | xargs go generate
 lint:
-	go list -f '{{.Dir}}/...' -m | xargs go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run -j 4 --allow-parallel-runner -v --fix -c .golangci.yaml
+	go list -f '{{.Dir}}/...' -m | xargs golangci-lint run -j 4 -v --fix -c .golangci.yaml
 structalign:
 	go list -f '{{.Dir}}' -m | xargs -I {} sh -c 'cd {} && go run golang.org/x/tools/go/analysis/passes/fieldalignment/cmd/fieldalignment -fix ./...'
