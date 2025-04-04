@@ -27,6 +27,9 @@ jobs:
   golangci-lint:
     needs: detect-modules
     runs-on: ubuntu-latest
+    env:
+      GOPRIVATE: "github.com/iamgoroot/*"
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
     strategy:
       matrix:
         modules: ${{ fromJSON(needs.detect-modules.outputs.modules) }}
@@ -35,6 +38,9 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
+
+      - run: git config --global url.https://$GITHUB_TOKEN:x-oauth-basic@github.com/.insteadOf https://github.com/
+
       - name: golangci-lint ${{ matrix.modules }}
         uses: golangci/golangci-lint-action@v7
         with:
