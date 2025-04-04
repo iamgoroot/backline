@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/iamgoroot/backline/plugin/scanner"
+	"github.com/iamgoroot/backline/plugin/search/bluge"
 
 	"github.com/iamgoroot/backline/plugin/search/indexer"
 
@@ -19,8 +20,6 @@ import (
 	"github.com/iamgoroot/backline/plugin/documentation/rawdefinition"
 	"github.com/iamgoroot/backline/plugin/documentation/swaggerui"
 	"github.com/iamgoroot/backline/plugin/documentation/techdocs"
-	"github.com/iamgoroot/backline/plugin/search/elastic"
-
 	"github.com/iamgoroot/backline/plugin/theme/stock"
 )
 
@@ -32,12 +31,12 @@ func main() {
 			EntityDiscoveries: []core.Discovery{ // Add Location Readers so backline knows how to read entities from different sources
 				&fs.Discovery{}, &github.Discovery{},
 			},
-			EntityRepo:        &store.Repo{},      // set repository plugin configurable with config file. supports pg and sqlite
-			KeyValStore:       &store.KV{},        // set key-value storage plugin configurable with config file. supports pg and sqlite
-			JobScheduler:      &store.Scheduler{}, // set job scheduler plugin configurable with config file. supports pg and sqlite
-			DistributedLocker: &store.Locker{},    // set distributed lock plugin configurable with config file. supports pg and sqlite
-			SearchPlugin:      &elastic.Search{},  // add search plugin
-			ScannerPlugin:     &scanner.Plugin{},  // add scanner plugin to scan/read entities.
+			EntityRepo:        &store.Repo{}, // set repository plugin configurable with config file. supports pg and sqlite
+			KeyValStore:       &store.KV{},   // set key-value storage plugin configurable with config file. supports pg and sqlite
+			JobScheduler:      &store.Scheduler{},
+			DistributedLocker: &store.Locker{},
+			SearchPlugin:      &bluge.Search{},   // add search plugin (bluge uses local files for saving indices)
+			ScannerPlugin:     &scanner.Plugin{}, // add scanner plugin to scan/read entities.
 		},
 		Plugins: []core.Plugin{
 			catalog.Plugin{}, // add web interface for catalog
@@ -52,6 +51,7 @@ func main() {
 
 			indexer.BaseEntityInfo{},
 			&indexer.OpenAPIIndexer{},
+			&indexer.AsyncAPI{},
 		},
 	}
 

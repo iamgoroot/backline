@@ -53,7 +53,7 @@ func setupMiddlewares(router *echo.Echo, cfg *CoreCfg) {
 }
 
 func setupCSRFMiddleware(router *echo.Echo, cfg *CoreCfg) {
-	if !cfg.Server.CSRF.Disabled {
+	if cfg.Server.CSRF.Disabled {
 		return
 	}
 
@@ -78,14 +78,16 @@ func setupCSRFMiddleware(router *echo.Echo, cfg *CoreCfg) {
 }
 
 func setupCORSMiddleware(router *echo.Echo, cfg *CoreCfg) {
-	if !cfg.Server.CORS.Disabled {
-		router.Use(middleware.CORSWithConfig(
-			middleware.CORSConfig{
-				AllowCredentials: true,
-				AllowOrigins:     cfg.Server.CORS.Origins,
-			}),
-		)
+	if cfg.Server.CORS.Disabled {
+		return
 	}
+
+	router.Use(middleware.CORSWithConfig(
+		middleware.CORSConfig{
+			AllowCredentials: true,
+			AllowOrigins:     cfg.Server.CORS.Origins,
+		}),
+	)
 }
 
 func writeErrResponse(c echo.Context, status int, err error) {

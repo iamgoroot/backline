@@ -1,0 +1,74 @@
+---
+apiVersion: backstage.io/v1beta1
+kind: Component
+metadata:
+  name: user-service
+  description: User management backend service
+spec:
+  type: service
+  lifecycle: production
+  owner: team-alpha
+  system: user-management
+relations:
+  - type: ownedBy
+    targetRef: group:default/team-alpha
+  - type: partOf
+    targetRef: system:default/user-management
+  - type: providesApi
+    targetRef: api:default/user-api
+
+---
+apiVersion: backstage.io/v1beta1
+kind: Group
+metadata:
+  name: team-alpha
+  description: Development team responsible for user services
+spec:
+  type: team
+  members:
+    - user:default/alice
+    - user:default/bob
+relations:
+  - type: owns
+    targetRef: component:default/user-service
+
+---
+apiVersion: backstage.io/v1beta1
+kind: System
+metadata:
+  name: user-management
+  description: User management ecosystem
+spec:
+  owner: team-alpha
+relations:
+  - type: hasPart
+    targetRef: component:default/user-service
+
+---
+apiVersion: backstage.io/v1beta1
+kind: API
+metadata:
+  name: user-api
+  description: REST API for user management
+spec:
+  type: rest
+  lifecycle: production
+  owner: team-alpha
+  system: user-management
+relations:
+  - type: providedBy
+    targetRef: component:default/user-service
+
+---
+apiVersion: backstage.io/v1beta1
+kind: Resource
+metadata:
+  name: user-db
+  description: Primary user database
+spec:
+  type: postgres
+  owner: team-alpha
+  system: user-management
+relations:
+  - type: consumedBy
+    targetRef: component:default/user-service

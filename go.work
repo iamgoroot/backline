@@ -4,10 +4,11 @@ toolchain go1.24.0
 
 use (
 	./app
-	./cmd/distributed
-	./cmd/scan_service
-	./cmd/standalone
-	./cmd/webapp
+	./examples/distributed
+	./examples/simple
+	./examples/split/scan_service
+	./examples/split/webapp
+	./examples/standalone
 	./pkg
 	./plugin/auth/oauth2
 	./plugin/catalog
@@ -24,5 +25,4 @@ use (
 	./plugin/search/indexer
 	./plugin/search/ui
 	./plugin/theme/stock
-
 )

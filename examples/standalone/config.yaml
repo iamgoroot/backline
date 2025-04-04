@@ -30,17 +30,19 @@ core:
     scanBeforeStart: true
   search:
     bluge:
-      location: /bluge-index
+      location: ./bluge-index
 locations:
-  github:
-    - owner: backstage
-      repo: backstage
-      branch: master
-      accessToken: env:GITHUB_ACCESS_TOKEN
-      depth: 1
-      paths:
-        - packages/catalog-model/examples
-        - plugins/techdocs-backend/examples/documented-component
+  fs:
+    - "/home/user/dev/ent"
+#  github:
+#    - owner: backstage
+#      repo: backstage
+#      branch: master
+#      accessToken: env:GITHUB_ACCESS_TOKEN
+#      depth: 1
+#      paths:
+#        - packages/catalog-model/examples
+#        - plugins/techdocs-backend/examples/documented-component
 oauth2:
   disabled: false
   jwtSecret: "secret"
