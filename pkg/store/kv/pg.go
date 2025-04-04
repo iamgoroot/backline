@@ -26,7 +26,7 @@ func (m *PgKV) Setup(ctx context.Context, deps core.Dependencies) error {
 	m.DB = db
 	m.bunKV = bunKV{db: db, logger: deps.Logger()}
 
-	return m.bunKV.setup(ctx)
+	return m.setup(ctx)
 }
 
 func (m *PgKV) getDB(deps core.Dependencies) (*bun.DB, error) {

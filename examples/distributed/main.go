@@ -41,11 +41,16 @@ func main() {
 			//KeyValStore: &kv.PgKV{},   // use postgres KV store explicitly. import  "github.com/iamgoroot/backline/pkg/store/kv"
 			//KeyValStore: &kv.SqliteKV{}, // use postgres KV store explicitly. import  "github.com/iamgoroot/backline/pkg/store/kv"
 
-			JobScheduler:      &store.Scheduler{}, // job scheduler plugin.  Basic implementation that uses KV store and Locker for scheduling and synchronizing tasks
-			DistributedLocker: &store.Locker{},    // distributed lock plugin configurable with config file. Uses pg_try_advisory_xact_lock for pg and sql table with transaction is used for sqlite
+			// job scheduler plugin.  Basic implementation that uses KV store and Locker for scheduling and synchronizing tasks
+			JobScheduler: &store.Scheduler{},
+			// distributed lock plugin configurable with config file.
+			// Uses pg_try_advisory_xact_lock for pg or sql table with transaction for sqlite
+			DistributedLocker: &store.Locker{},
+			// add search plugin based on elastic search. import "github.com/iamgoroot/backline/plugin/search/elastic"
+			SearchPlugin: &elastic.Search{},
 
-			SearchPlugin: &elastic.Search{}, // add search plugin based on elastic search. import "github.com/iamgoroot/backline/plugin/search/elastic"
-			//SearchPlugin: &bluge.Search{}, // add search plugin based on bluge library (storing indices in local file). import "github.com/iamgoroot/backline/plugin/search/bluge"
+			// add search plugin based on bluge library (storing indices in local file). import "github.com/iamgoroot/backline/plugin/search/bluge"
+			//SearchPlugin: &bluge.Search{},
 
 			ScannerPlugin: &scanner.Plugin{}, // add scanner plugin to scan/read entities.
 		},
