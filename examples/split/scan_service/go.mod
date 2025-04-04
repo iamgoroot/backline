@@ -86,15 +86,3 @@ require (
 	modernc.org/memory v1.9.1 // indirect
 	modernc.org/sqlite v1.37.0 // indirect
 )
-
-//TODO: remove
-replace (
-	github.com/iamgoroot/backline/app => ./../../../app
-	github.com/iamgoroot/backline/pkg => ./../../../pkg
-	github.com/iamgoroot/backline/plugin/catalog => ./../../../plugin/catalog
-	github.com/iamgoroot/backline/plugin/discovery/fs => ./../../../plugin/discovery/fs
-	github.com/iamgoroot/backline/plugin/discovery/github => ./../../../plugin/discovery/github
-	github.com/iamgoroot/backline/plugin/documentation/techdocs => ./../../../plugin/documentation/techdocs
-	github.com/iamgoroot/backline/plugin/scanner => ./../../../plugin/scanner
-
-)
