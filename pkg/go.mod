@@ -6,10 +6,10 @@ require (
 	github.com/a-h/templ v0.3.906
 	github.com/goccy/go-yaml v1.18.0
 	github.com/labstack/echo/v4 v4.13.4
-	github.com/uptrace/bun v1.2.14
+	github.com/uptrace/bun v1.2.15
 	github.com/uptrace/bun/dialect/pgdialect v1.2.14
 	github.com/uptrace/bun/dialect/sqlitedialect v1.2.14
-	github.com/uptrace/bun/driver/pgdriver v1.2.14
+	github.com/uptrace/bun/driver/pgdriver v1.2.15
 	github.com/uptrace/bun/driver/sqliteshim v1.2.14
 	github.com/uptrace/bun/extra/bundebug v1.2.14
 )

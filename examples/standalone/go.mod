@@ -64,10 +64,10 @@ require (
 	github.com/shurcooL/graphql v0.0.0-20230722043721-ed46e5a46466 // indirect
 	github.com/tenkoh/goldmark-img64 v0.1.2 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
-	github.com/uptrace/bun v1.2.14 // indirect
+	github.com/uptrace/bun v1.2.15 // indirect
 	github.com/uptrace/bun/dialect/pgdialect v1.2.14 // indirect
 	github.com/uptrace/bun/dialect/sqlitedialect v1.2.14 // indirect
-	github.com/uptrace/bun/driver/pgdriver v1.2.14 // indirect
+	github.com/uptrace/bun/driver/pgdriver v1.2.15 // indirect
 	github.com/uptrace/bun/driver/sqliteshim v1.2.14 // indirect
 	github.com/uptrace/bun/extra/bundebug v1.2.14 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
