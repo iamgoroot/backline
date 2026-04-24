@@ -1,20 +1,21 @@
 module github.com/iamgoroot/backline/pkg
 
-go 1.24
+go 1.24.0
 
 require (
 	github.com/a-h/templ v0.3.906
 	github.com/goccy/go-yaml v1.18.0
 	github.com/labstack/echo/v4 v4.13.4
-	github.com/uptrace/bun v1.2.14
+	github.com/uptrace/bun v1.2.15
 	github.com/uptrace/bun/dialect/pgdialect v1.2.14
 	github.com/uptrace/bun/dialect/sqlitedialect v1.2.14
-	github.com/uptrace/bun/driver/pgdriver v1.2.14
+	github.com/uptrace/bun/driver/pgdriver v1.2.15
 	github.com/uptrace/bun/driver/sqliteshim v1.2.14
 	github.com/uptrace/bun/extra/bundebug v1.2.14
 )
 
 require (
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -31,13 +32,13 @@ require (
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	go.opentelemetry.io/otel v1.37.0 // indirect
-	go.opentelemetry.io/otel/trace v1.37.0 // indirect
-	golang.org/x/crypto v0.40.0 // indirect
+	go.opentelemetry.io/otel v1.41.0 // indirect
+	go.opentelemetry.io/otel/trace v1.41.0 // indirect
+	golang.org/x/crypto v0.45.0 // indirect
 	golang.org/x/exp v0.0.0-20250717185816-542afb5b7346 // indirect
-	golang.org/x/net v0.42.0 // indirect
-	golang.org/x/sys v0.34.0 // indirect
-	golang.org/x/text v0.27.0 // indirect
+	golang.org/x/net v0.47.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
+	golang.org/x/text v0.31.0 // indirect
 	mellium.im/sasl v0.3.2 // indirect
 	modernc.org/libc v1.66.3 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
